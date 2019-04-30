@@ -8,21 +8,21 @@ import java.util.Date;
 @Entity
 @DiscriminatorValue("CA")
 public class CheckingAccount extends Account implements Serializable {
-    private Double summit;
+    private Double overdraft;
 
     public CheckingAccount() {
     }
 
-    public CheckingAccount(String code, Double amount, Date createdAt, Client client, Double summit) {
+    public CheckingAccount(String code, Double amount, Date createdAt, Client client, Double overdraft) {
         super(code, amount, createdAt, client);
-        this.summit = summit;
+        this.overdraft = overdraft;
     }
 
-    public Double getSummit() {
-        return summit;
+    public Double getOverdraft() {
+        return overdraft;
     }
 
-    public void setSummit(Double summit) {
-        this.summit = summit;
+    public void setOverdraft(Double overdraft) {
+        this.overdraft = overdraft;
     }
 }
