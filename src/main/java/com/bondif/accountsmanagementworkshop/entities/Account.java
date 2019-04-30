@@ -1,6 +1,5 @@
 package com.bondif.accountsmanagementworkshop.entities;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -20,7 +19,7 @@ public abstract class Account implements Serializable {
     private String code;
 
     @NonNull
-    private Double amount;
+    private Double balance;
 
     @NonNull
     private Date createdAt;
@@ -36,9 +35,9 @@ public abstract class Account implements Serializable {
     public Account() {
     }
 
-    public Account(String code, @NonNull Double amount, @NotNull Date createdAt, @NonNull Client client) {
+    public Account(String code, @NonNull Double balance, @NotNull Date createdAt, @NonNull Client client) {
         this.code = code;
-        this.amount = amount;
+        this.balance = balance;
         this.createdAt = createdAt;
         this.client = client;
     }
@@ -51,12 +50,12 @@ public abstract class Account implements Serializable {
         this.code = code;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getBalance() {
+        return balance;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setBalance(Double balance) {
+        this.balance = balance;
     }
 
     public Date getCreatedAt() {

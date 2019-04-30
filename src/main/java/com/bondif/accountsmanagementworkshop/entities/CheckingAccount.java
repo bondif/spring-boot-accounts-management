@@ -18,11 +18,11 @@ public class CheckingAccount extends Account implements Serializable {
         this.summit = summit;
     }
 
-    public Double getLimit() {
+    public Double getSummit() {
         return summit;
     }
 
-    public void setLimit(Double summit) {
+    public void setSummit(Double summit) {
         this.summit = summit;
     }
 }
