@@ -7,6 +7,7 @@
 <main role="main" class="container" layout:fragment="content">
     <div class="row">
         <div class="col-md-6">
+            <!-- account -->
             <div class="card">
                 <div class="card-header bg-info">View Account</div>
                 <div class="card-body">
@@ -17,6 +18,7 @@
                     </form>
                 </div>
             </div>
+            <!-- account detail -->
             <div class="card">
                 <div class="card-header bg-info">Account Detail</div>
                 <div class="card-body">
@@ -47,7 +49,7 @@
                                 </div>
 
                                 <div class="form-group col-md-12 form-check form-check-inline">
-                                    <input type="radio" name="operation"
+                                    <input type="radio" name="operation" checked
                                            th:value="'deposit'" id="deposit" class="form-check-input">
                                     <label class="form-check-label" for="deposit">Deposit </label>
 
@@ -94,7 +96,7 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li th:each="pageNumber : ${pageNumbers}" th:class="'page-item ' + ${pageNumber == operations.number + 1 ? 'active' : ''}">
-                                <a class="page-link" th:href="@{'/admin'/(page = ${pageNumber})}" th:text="${pageNumber}"></a>
+                                <a class="page-link" th:href="@{'/admin/'(account = ${account.code}, page = ${pageNumber})}" th:text="${pageNumber}"></a>
                             </li>
                         </ul>
                     </nav>

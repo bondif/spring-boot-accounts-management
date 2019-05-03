@@ -54,8 +54,8 @@ public class BankDomainImpl implements IBankDomain {
         if (account.getBalance() + overdraft < amount)
             throw new RuntimeException("Insufficient balance");
 
-        Withdrawal deposit = new Withdrawal(new Date(), amount, account);
-        operationRepository.save(deposit);
+        Withdrawal withdrawal = new Withdrawal(new Date(), amount, account);
+        operationRepository.save(withdrawal);
 
         account.setBalance(account.getBalance() - amount);
         accountRepository.save(account);

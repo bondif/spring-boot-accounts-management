@@ -19,30 +19,32 @@ public class HomeController {
     }
 
     @GetMapping("/admin")
-    public String index(Model model) {
+    public String index(Model model,
+                        @RequestParam(name = "account", defaultValue = "0") String accountCode,
+                        @RequestParam(name = "page", defaultValue = "1") int page) {
+        page = page - 1;
         model.addAttribute("account", null);
+        if (!accountCode.equals("0")) {
+            model.addAttribute("operations", bankDomain.operations(accountCode, page, PAGE_SIZE));
+            model.addAttribute("pageNumbers", getPageNumbers(bankDomain.operations(accountCode, page, PAGE_SIZE)));
+        }
+
         return "admin/index";
     }
 
     @GetMapping("/admin/getAccount")
     public String getAccount(String code, Model model,
                              @RequestParam(name = "page", defaultValue = "1") int page) {
+        page = page - 1;
         model.addAttribute("account", bankDomain.retrieveAccount(code));
         model.addAttribute("operations", bankDomain.operations(code, page, PAGE_SIZE));
+        model.addAttribute("pageNumbers", getPageNumbers(bankDomain.operations(code, page, PAGE_SIZE)));
         return "admin/index";
     }
 
     @PostMapping("/admin/addOperation")
     public String addOperation(Model model, String operation, Double amount, String accountCode,
                                @RequestParam(name = "page", defaultValue = "1") int page) {
-        page = page - 1;
-        Page<Operation> operationPage = bankDomain.operations(accountCode, page, PAGE_SIZE);
-        int[] pageNumbers = new int[operationPage.getTotalPages()];
-        for (int i = 1; i <= pageNumbers.length; i++) pageNumbers[i-1] = i;
-
-        model.addAttribute("operations", operationPage);
-        model.addAttribute("account", bankDomain.retrieveAccount(accountCode));
-        model.addAttribute("pageNumbers", pageNumbers);
         switch (operation) {
             case "deposit":
                 bankDomain.deposit(accountCode, amount);
@@ -55,6 +57,19 @@ public class HomeController {
 //                break;
         }
 
-        return "admin/index";
+        page = page - 1;
+        Page<Operation> operationPage = bankDomain.operations(accountCode, page, PAGE_SIZE);
+
+        model.addAttribute("operations", operationPage);
+        model.addAttribute("account", bankDomain.retrieveAccount(accountCode));
+        model.addAttribute("pageNumbers", getPageNumbers(operationPage));
+
+        return "redirect:/admin/getAccount?code=" + accountCode;
+    }
+
+    private int[] getPageNumbers(Page page) {
+        int[] pageNumbers = new int[page.getTotalPages()];
+        for (int i = 1; i <= pageNumbers.length; i++) pageNumbers[i-1] = i;
+        return pageNumbers;
     }
 }
