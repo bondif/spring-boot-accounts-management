@@ -2,6 +2,8 @@ package com.bondif.accountsmanagementworkshop.domain;
 
 import com.bondif.accountsmanagementworkshop.dao.AccountRepository;
 import com.bondif.accountsmanagementworkshop.dao.OperationRepository;
+import com.bondif.accountsmanagementworkshop.domain.exceptions.AccountDoesNotExistException;
+import com.bondif.accountsmanagementworkshop.domain.exceptions.InsufficientBalanceException;
 import com.bondif.accountsmanagementworkshop.entities.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +29,7 @@ public class BankDomainImpl implements IBankDomain {
     public Account retrieveAccount(String accountCode) {
         Optional<Account> account = accountRepository.findById(accountCode);
 
-        if (!account.isPresent()) throw new RuntimeException("This account doesn't exist");
+        if (!account.isPresent()) throw new AccountDoesNotExistException();
 
         return account.get();
     }
@@ -52,7 +54,7 @@ public class BankDomainImpl implements IBankDomain {
             overdraft = ((CheckingAccount) account).getOverdraft();
 
         if (account.getBalance() + overdraft < amount)
-            throw new RuntimeException("Insufficient balance");
+            throw new InsufficientBalanceException();
 
         Withdrawal withdrawal = new Withdrawal(new Date(), amount, account);
         operationRepository.save(withdrawal);

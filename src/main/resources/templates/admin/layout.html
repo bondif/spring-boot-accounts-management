@@ -53,10 +53,22 @@
         </div>
     </nav>
 
+    <div class="container">
+        <div th:if="${error}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> <span th:text="${error}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
     <div layout:fragment="content">
 
     </div>
 </div>
 
+<script th:src="@{/js/jquery-3.3.1.slim.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 package com.bondif.accountsmanagementworkshop.controllers;
 
 import com.bondif.accountsmanagementworkshop.domain.BankDomainImpl;
+import com.bondif.accountsmanagementworkshop.domain.exceptions.AccountDoesNotExistException;
+import com.bondif.accountsmanagementworkshop.domain.exceptions.InsufficientBalanceException;
 import com.bondif.accountsmanagementworkshop.entities.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -8,10 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HomeController {
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 4;
     private BankDomainImpl bankDomain;
 
     public HomeController(BankDomainImpl bankDomain) {
@@ -33,36 +36,50 @@ public class HomeController {
     }
 
     @GetMapping("/admin/getAccount")
-    public String getAccount(String code, Model model,
+    public String getAccount(String code, Model model, RedirectAttributes redirectAttributes,
                              @RequestParam(name = "page", defaultValue = "1") int page) {
         page = page - 1;
-        model.addAttribute("account", bankDomain.retrieveAccount(code));
+
+        try {
+            model.addAttribute("account", bankDomain.retrieveAccount(code));
+        } catch (AccountDoesNotExistException e) {
+            model.addAttribute("account", null);
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/admin";
+        }
         model.addAttribute("operations", bankDomain.operations(code, page, PAGE_SIZE));
         model.addAttribute("pageNumbers", getPageNumbers(bankDomain.operations(code, page, PAGE_SIZE)));
+
         return "admin/index";
     }
 
     @PostMapping("/admin/addOperation")
     public String addOperation(Model model, String operation, Double amount, String accountCode,
-                               @RequestParam(name = "page", defaultValue = "1") int page) {
-        switch (operation) {
-            case "deposit":
-                bankDomain.deposit(accountCode, amount);
-                break;
-            case "withdrawal":
-                bankDomain.withdrawal(accountCode, amount);
-                break;
-            case "transfer":
-//                bankDomain.transfer();
-//                break;
-        }
+                               @RequestParam(name = "page", defaultValue = "1") int page,
+                               RedirectAttributes redirectAttributes) {
 
         page = page - 1;
         Page<Operation> operationPage = bankDomain.operations(accountCode, page, PAGE_SIZE);
 
         model.addAttribute("operations", operationPage);
-        model.addAttribute("account", bankDomain.retrieveAccount(accountCode));
         model.addAttribute("pageNumbers", getPageNumbers(operationPage));
+
+        switch (operation) {
+            case "deposit":
+                bankDomain.deposit(accountCode, amount);
+                break;
+            case "withdrawal":
+                try {
+                    bankDomain.withdrawal(accountCode, amount);
+                } catch (InsufficientBalanceException e) {
+                    redirectAttributes.addFlashAttribute("error", e.getMessage());
+                    return "redirect:/admin/getAccount?code=" + accountCode;
+                }
+                break;
+            case "transfer":
+//                bankDomain.transfer();
+//                break;
+        }
 
         return "redirect:/admin/getAccount?code=" + accountCode;
     }

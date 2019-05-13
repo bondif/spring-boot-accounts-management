@@ -96,7 +96,7 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li th:each="pageNumber : ${pageNumbers}" th:class="'page-item ' + ${pageNumber == operations.number + 1 ? 'active' : ''}">
-                                <a class="page-link" th:href="@{'/admin/'(account = ${account.code}, page = ${pageNumber})}" th:text="${pageNumber}"></a>
+                                <a class="page-link" th:href="@{'/admin/getAccount/'(code = ${account.code}, page = ${pageNumber})}" th:text="${pageNumber}"></a>
                             </li>
                         </ul>
                     </nav>
