@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="~{admin/layout}">
+<body>
+<main role="main" class="container" layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info">Clients</div>
+                <div class="card-body">
+                    <a th:href="'/admin/clients/create/'" class="btn btn-success mb-2">New</a>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="client : ${clients}">
+                            <th th:text="${client.code}"></th>
+                            <td th:text="${client.name}"></td>
+                            <td>
+                                <a th:href="'/admin/clients/edit/' + ${client.code}" class="btn btn-warning">Edit</a>
+                                <form th:action="@{'/admin/clients/destroy/' + ${client.code}}" th:method="delete"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Are you sure?')">Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <nav>
+                        <ul class="pagination">
+                            <li th:each="pageNumber : ${pageNumbers}"
+                                th:class="'page-item ' + ${pageNumber == clients.number + 1 ? 'active' : ''}">
+                                <a class="page-link" th:href="@{'/admin/clients'(page = ${pageNumber})}"
+                                   th:text="${pageNumber}"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div>
+
+</div>
+</body>
+</html>
