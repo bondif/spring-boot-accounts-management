@@ -55,6 +55,7 @@ public class HomeController {
 
     @PostMapping("/admin/addOperation")
     public String addOperation(Model model, String operation, Double amount, String accountCode,
+                               String receiverCode,
                                @RequestParam(name = "page", defaultValue = "1") int page,
                                RedirectAttributes redirectAttributes) {
 
@@ -77,8 +78,16 @@ public class HomeController {
                 }
                 break;
             case "transfer":
-//                bankDomain.transfer();
-//                break;
+                try {
+                    bankDomain.transfer(accountCode, receiverCode, amount);
+                } catch (AccountDoesNotExistException e) {
+                    redirectAttributes.addFlashAttribute("error", e.getMessage());
+                    return "redirect:/admin/getAccount?code=" + accountCode;
+                } catch (InsufficientBalanceException e) {
+                    redirectAttributes.addFlashAttribute("error", e.getMessage());
+                    return "redirect:/admin/getAccount?code=" + accountCode;
+                }
+                break;
         }
 
         return "redirect:/admin/getAccount?code=" + accountCode;

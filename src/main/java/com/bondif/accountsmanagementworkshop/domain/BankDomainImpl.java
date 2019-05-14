@@ -65,8 +65,8 @@ public class BankDomainImpl implements IBankDomain {
 
     @Override
     public void transfer(String senderAccountCode, String receiverAccountCode, double amount) {
-        deposit(senderAccountCode, amount);
-        withdrawal(receiverAccountCode, amount);
+        deposit(receiverAccountCode, amount);
+        withdrawal(senderAccountCode, amount);
     }
 
     @Override

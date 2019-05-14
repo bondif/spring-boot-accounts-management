@@ -6,22 +6,6 @@
     <meta charset="UTF-8">
     <title>Accounts Management</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -70,5 +54,7 @@
 <script th:src="@{/js/jquery-3.3.1.slim.min.js}"></script>
 <script th:src="@{/js/popper.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
+
+<div layout:fragment="scripts"></div>
 </body>
 </html>

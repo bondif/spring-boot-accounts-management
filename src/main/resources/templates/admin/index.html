@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <form th:action="@{/admin/getAccount}" class="form-inline">
                         <label for="code">Account Code</label>
-                        <input type="text" id="code" name="code" th:value="a1" class="form-control">
+                        <input type="text" id="code" name="code" th:value="a1" class="form-control" required>
                         <input type="submit" value="Search" class="btn btn-primary">
                     </form>
                 </div>
@@ -37,8 +37,9 @@
             </div>
         </div>
         <div class="col-md-6">
+            <!-- make an operation -->
             <div class="card">
-                <div class="card-header bg-info">Operations list</div>
+                <div class="card-header bg-info">Make an Operation</div>
                 <div class="card-body">
                     <div th:if="${account}">
                         <form th:action="@{/admin/addOperation}" method="post" class="form">
@@ -61,10 +62,14 @@
                                            th:value="'transfer'" id="transfer" class="form-check-input">
                                     <label class="form-check-label" for="transfer">Transfer </label>
                                 </div>
+                                <div class="form-group col-md-12 d-none" id="receiverBlock">
+                                    <label for="receiverCode">Receiver Account Code</label>
+                                    <input type="text" id="receiverCode" name="receiverCode" class="form-control">
+                                </div>
                                 <div class="form-group col-md-12">
                                     <label for="amount">Amount</label>
                                     <input type="number" min="1" id="amount" name="amount" th:value="a1"
-                                           class="form-control">
+                                           class="form-control" required>
                                     <input type="submit" value="Save" class="btn btn-primary">
                                 </div>
                             </div>
@@ -72,13 +77,14 @@
                     </div>
                 </div>
             </div>
+            <!-- operations list -->
             <div class="card">
                 <div class="card-header bg-info">Operations List</div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Num</th>
+                            <th>#</th>
                             <th>Type</th>
                             <th>Date</th>
                             <th>Amount</th>
@@ -105,5 +111,18 @@
         </div>
     </div>
 </main>
+
+<div layout:fragment="scripts">
+    <script>
+        $('input[name="operation"]').click(function () {
+            console.log($('input[name="operation"]:checked').val());
+            if($('input[name="operation"]:checked').val() === 'transfer') {
+                $('#receiverBlock').removeClass('d-none');
+            } else {
+                $('#receiverBlock').addClass('d-none');
+            }
+        });
+    </script>
+</div>
 </body>
 </html>
