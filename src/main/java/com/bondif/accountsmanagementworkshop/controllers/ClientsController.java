@@ -1,12 +1,9 @@
 package com.bondif.accountsmanagementworkshop.controllers;
 
-import com.bondif.accountsmanagementworkshop.dao.ClientRepository;
 import com.bondif.accountsmanagementworkshop.domain.IClientDomain;
 import com.bondif.accountsmanagementworkshop.domain.exceptions.ClientDoesNotExistException;
 import com.bondif.accountsmanagementworkshop.entities.Client;
-import com.bondif.accountsmanagementworkshop.entities.Operation;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +40,7 @@ public class ClientsController {
 
     @PostMapping("/admin/clients/store")
     public String store(@Valid Client client, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "admin/clients/create";
         }
 
@@ -66,7 +63,7 @@ public class ClientsController {
 
     @PutMapping("/admin/clients/update/{id}")
     public String update(@PathVariable Long id, @Valid Client client, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "admin/clients/edit";
         }
 
@@ -83,7 +80,7 @@ public class ClientsController {
 
     private int[] getPageNumbers(Page page) {
         int[] pageNumbers = new int[page.getTotalPages()];
-        for (int i = 1; i <= pageNumbers.length; i++) pageNumbers[i-1] = i;
+        for (int i = 1; i <= pageNumbers.length; i++) pageNumbers[i - 1] = i;
         return pageNumbers;
     }
 }

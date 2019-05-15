@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="~{admin/layout}">
+<body>
+<main role="main" class="container" layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info">Accounts</div>
+                <div class="card-body">
+                    <a th:href="'/admin/accounts/create/'" class="btn btn-success mb-2">New</a>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Balance</th>
+                            <th>Special</th>
+                            <th>Client</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="account : ${accounts}">
+                            <th th:text="${account.code}"></th>
+                            <td th:text="${account.class.simpleName}"></td>
+                            <td th:text="${account.balance}"></td>
+                            <td th:text="${account.class.simpleName} == 'CheckingAccount' ? 'Overdraft: ' + ${account.overdraft} : 'Rate: ' + ${account.rate}"></td>
+                            <td th:text="${account.client.name}"></td>
+                            <td th:text="${account.createdAt}"></td>
+                            <td>
+                                <a th:href="'/admin/accounts/edit/' + ${account.code}" class="btn btn-warning">Edit</a>
+                                <form th:action="@{'/admin/accounts/destroy/' + ${account.code}}" th:method="delete"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Are you sure?')">Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <nav>
+                        <ul class="pagination">
+                            <li th:each="pageNumber : ${pageNumbers}"
+                                th:class="'page-item ' + ${pageNumber == accounts.number + 1 ? 'active' : ''}">
+                                <a class="page-link" th:href="@{'/admin/accounts'(page = ${pageNumber})}"
+                                   th:text="${pageNumber}"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="~{admin/layout}">
+<body>
+<div class="container" layout:fragment="content">
+    <form th:action="@{'/admin/accounts/update/' + ${accountCode}}" th:method="put" class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="type">Account Type</label>
+                <select name="type" id="type" class="form-control" required>
+                    <option value="CA" th:selected="${account.class.simpleName} == 'CheckingAccount'">Checking Account</option>
+                    <option value="SA" th:selected="${account.class.simpleName} == 'SavingsAccount'">Savings Account</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="balance">Balance</label>
+                <input id="balance" th:value="${account.balance}" name="balance" type="number" min="0" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="special">Special</label>
+                <input id="special" th:value="${account.class.simpleName} == 'CheckingAccount' ? ${account.overdraft} : ${account.rate}" name="special" type="number" min="0" class="form-control" required>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

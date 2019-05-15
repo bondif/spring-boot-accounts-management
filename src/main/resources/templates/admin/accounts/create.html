@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="~{admin/layout}">
+<body>
+<div class="container" layout:fragment="content">
+    <form action="/admin/accounts/store" method="post" class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input id="code" name="code" type="text" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="clientCode">Client</label>
+                <select id="clientCode" name="clientCode" class="form-control" required>
+                    <option th:each="client : ${clients}"
+                            th:value="${client.code}"
+                            th:text="${client.code + ' - ' + client.name}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type">Account Type</label>
+                <select name="type" id="type" class="form-control" required>
+                    <option value="CA">Checking Account</option>
+                    <option value="SA">Savings Account</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="balance">Balance</label>
+                <input id="balance" name="balance" type="number" min="0" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="special">Special</label>
+                <input id="special" name="special" type="number" min="0" class="form-control" required>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Store</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+<!-- TODO javascript to change special text -->
