@@ -24,8 +24,9 @@
                             <th th:text="${client.code}"></th>
                             <td th:text="${client.name}"></td>
                             <td>
-                                <a th:href="'/admin/clients/edit/' + ${client.code}" class="btn btn-warning">Edit</a>
-                                <form th:action="@{'/admin/clients/destroy/' + ${client.code}}" th:method="delete"
+                                <a th:href="'/admin/clients/' + ${client.code} + '/edit'"
+                                   class="btn btn-warning">Edit</a>
+                                <form th:action="@{'/admin/clients/' + ${client.code} + '/destroy'}" th:method="delete"
                                       class="d-inline">
                                     <button type="submit" class="btn btn-danger"
                                             onclick="return confirm('Are you sure?')">Delete

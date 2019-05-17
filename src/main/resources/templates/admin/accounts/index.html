@@ -32,8 +32,8 @@
                             <td th:text="${account.client.name}"></td>
                             <td th:text="${account.createdAt}"></td>
                             <td>
-                                <a th:href="'/admin/accounts/edit/' + ${account.code}" class="btn btn-warning">Edit</a>
-                                <form th:action="@{'/admin/accounts/destroy/' + ${account.code}}" th:method="delete"
+                                <a th:href="'/admin/accounts/' + ${account.code} + '/edit'" class="btn btn-warning">Edit</a>
+                                <form th:action="@{'/admin/accounts/' + ${account.code} + '/destroy'}" th:method="delete"
                                       class="d-inline">
                                     <button type="submit" class="btn btn-danger"
                                             onclick="return confirm('Are you sure?')">Delete

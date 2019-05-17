@@ -62,7 +62,7 @@ public class AccountsController {
     }
 
 
-    @GetMapping("/admin/accounts/edit/{code}")
+    @GetMapping("/admin/accounts/{code}/edit")
     public String edit(@PathVariable String code, Model model) {
         Account account = null;
         try {
@@ -76,7 +76,7 @@ public class AccountsController {
         return "admin/accounts/edit";
     }
 
-    @PutMapping("/admin/accounts/update/{code}")
+    @PutMapping("/admin/accounts/{code}/update")
     public String update(@PathVariable String code, String type, Double balance, Double special) {
         Account oldAccount = accountDomain.retrieveAccount(code);
 
@@ -104,7 +104,7 @@ public class AccountsController {
         return "redirect:/admin/accounts";
     }
 
-    @DeleteMapping("/admin/accounts/destroy/{code}")
+    @DeleteMapping("/admin/accounts/{code}/destroy")
     public String destroy(@PathVariable String code) {
         accountDomain.removeAccount(code);
         return "redirect:/admin/accounts";

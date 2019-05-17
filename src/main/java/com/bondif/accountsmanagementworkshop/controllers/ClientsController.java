@@ -49,7 +49,7 @@ public class ClientsController {
         return "redirect:/admin/clients";
     }
 
-    @GetMapping("/admin/clients/edit/{id}")
+    @GetMapping("/admin/clients/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         Client client = null;
         try {
@@ -61,7 +61,7 @@ public class ClientsController {
         return "admin/clients/edit";
     }
 
-    @PutMapping("/admin/clients/update/{id}")
+    @PutMapping("/admin/clients/{id}/update")
     public String update(@PathVariable Long id, @Valid Client client, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "admin/clients/edit";
@@ -72,7 +72,7 @@ public class ClientsController {
         return "redirect:/admin/clients";
     }
 
-    @DeleteMapping("/admin/clients/destroy/{id}")
+    @DeleteMapping("/admin/clients/{id}/destroy")
     public String destroy(@PathVariable Long id) {
         clientDomain.removeClient(id);
         return "redirect:/admin/clients";
