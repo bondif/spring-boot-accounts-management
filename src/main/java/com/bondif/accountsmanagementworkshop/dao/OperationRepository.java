@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OperationRepository extends JpaRepository<Operation, Long> {
     Page<Operation> findAllByAccount_CodeOrderByCreatedAtDesc(String code, Pageable pageable);
+    Page<Operation> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

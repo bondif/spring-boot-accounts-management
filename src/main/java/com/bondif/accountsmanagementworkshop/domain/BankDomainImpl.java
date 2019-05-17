@@ -26,6 +26,11 @@ public class BankDomainImpl implements IBankDomain {
     }
 
     @Override
+    public Page<Operation> allOperations(int page, int size) {
+        return operationRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, size));
+    }
+
+    @Override
     public Account retrieveAccount(String accountCode) {
         Optional<Account> account = accountRepository.findById(accountCode);
 
