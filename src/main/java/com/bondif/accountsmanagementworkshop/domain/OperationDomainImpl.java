@@ -1,8 +1,6 @@
 package com.bondif.accountsmanagementworkshop.domain;
 
-import com.bondif.accountsmanagementworkshop.dao.AccountRepository;
 import com.bondif.accountsmanagementworkshop.dao.OperationRepository;
-import com.bondif.accountsmanagementworkshop.domain.exceptions.AccountDoesNotExistException;
 import com.bondif.accountsmanagementworkshop.domain.exceptions.InsufficientBalanceException;
 import com.bondif.accountsmanagementworkshop.entities.*;
 import org.springframework.data.domain.Page;
@@ -11,17 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 @Transactional
-public class BankDomainImpl implements IBankDomain {
-    private AccountRepository accountRepository;
+public class OperationDomainImpl implements IOperationDomain {
+    private IAccountDomain accountDomain;
     private OperationRepository operationRepository;
 
-    public BankDomainImpl(AccountRepository accountRepository,
-                          OperationRepository operationRepository) {
-        this.accountRepository = accountRepository;
+    public OperationDomainImpl(IAccountDomain accountDomain, OperationRepository operationRepository) {
+        this.accountDomain = accountDomain;
         this.operationRepository = operationRepository;
     }
 
@@ -31,28 +27,19 @@ public class BankDomainImpl implements IBankDomain {
     }
 
     @Override
-    public Account retrieveAccount(String accountCode) {
-        Optional<Account> account = accountRepository.findById(accountCode);
-
-        if (!account.isPresent()) throw new AccountDoesNotExistException();
-
-        return account.get();
-    }
-
-    @Override
     public void deposit(String accountCode, double amount) {
-        Account account = retrieveAccount(accountCode);
+        Account account = accountDomain.retrieveAccount(accountCode);
 
         Deposit deposit = new Deposit(new Date(), amount, account);
         operationRepository.save(deposit);
 
         account.setBalance(account.getBalance() + amount);
-        accountRepository.save(account);
+        accountDomain.saveAccount(account);
     }
 
     @Override
     public void withdrawal(String accountCode, double amount) {
-        Account account = retrieveAccount(accountCode);
+        Account account = accountDomain.retrieveAccount(accountCode);
 
         double overdraft = 0;
         if (account instanceof CheckingAccount)
@@ -65,7 +52,7 @@ public class BankDomainImpl implements IBankDomain {
         operationRepository.save(withdrawal);
 
         account.setBalance(account.getBalance() - amount);
-        accountRepository.save(account);
+        accountDomain.saveAccount(account);
     }
 
     @Override

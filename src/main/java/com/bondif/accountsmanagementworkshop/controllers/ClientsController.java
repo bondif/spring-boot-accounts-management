@@ -23,7 +23,7 @@ public class ClientsController {
 
     @GetMapping("/admin/clients")
     public String index(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
-        page = page - 1;
+        --page;
 
         Page<Client> clients = clientDomain.clients(page, PAGE_SIZE);
         model.addAttribute("pageNumbers", getPageNumbers(clients));

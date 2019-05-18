@@ -1,6 +1,8 @@
 package com.bondif.accountsmanagementworkshop.controllers;
 
-import com.bondif.accountsmanagementworkshop.domain.BankDomainImpl;
+import com.bondif.accountsmanagementworkshop.domain.IAccountDomain;
+import com.bondif.accountsmanagementworkshop.domain.IOperationDomain;
+import com.bondif.accountsmanagementworkshop.domain.OperationDomainImpl;
 import com.bondif.accountsmanagementworkshop.domain.exceptions.AccountDoesNotExistException;
 import com.bondif.accountsmanagementworkshop.domain.exceptions.InsufficientBalanceException;
 import com.bondif.accountsmanagementworkshop.entities.Operation;
@@ -15,10 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class HomeController {
     private static final int PAGE_SIZE = 4;
-    private BankDomainImpl bankDomain;
+    private IOperationDomain operationDomain;
+    private IAccountDomain accountDomain;
 
-    public HomeController(BankDomainImpl bankDomain) {
-        this.bankDomain = bankDomain;
+    public HomeController(IOperationDomain operationDomain, IAccountDomain accountDomain) {
+        this.operationDomain = operationDomain;
+        this.accountDomain = accountDomain;
     }
 
     @GetMapping("/admin")
@@ -28,8 +32,8 @@ public class HomeController {
         page = page - 1;
         model.addAttribute("account", null);
         if (!accountCode.equals("0")) {
-            model.addAttribute("operations", bankDomain.operations(accountCode, page, PAGE_SIZE));
-            model.addAttribute("pageNumbers", getPageNumbers(bankDomain.operations(accountCode, page, PAGE_SIZE)));
+            model.addAttribute("operations", operationDomain.operations(accountCode, page, PAGE_SIZE));
+            model.addAttribute("pageNumbers", getPageNumbers(operationDomain.operations(accountCode, page, PAGE_SIZE)));
         }
 
         return "admin/index";
@@ -41,14 +45,14 @@ public class HomeController {
         page = page - 1;
 
         try {
-            model.addAttribute("account", bankDomain.retrieveAccount(code));
+            model.addAttribute("account", accountDomain.retrieveAccount(code));
         } catch (AccountDoesNotExistException e) {
             model.addAttribute("account", null);
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/admin";
         }
-        model.addAttribute("operations", bankDomain.operations(code, page, PAGE_SIZE));
-        model.addAttribute("pageNumbers", getPageNumbers(bankDomain.operations(code, page, PAGE_SIZE)));
+        model.addAttribute("operations", operationDomain.operations(code, page, PAGE_SIZE));
+        model.addAttribute("pageNumbers", getPageNumbers(operationDomain.operations(code, page, PAGE_SIZE)));
 
         return "admin/index";
     }
@@ -60,18 +64,18 @@ public class HomeController {
                                RedirectAttributes redirectAttributes) {
 
         page = page - 1;
-        Page<Operation> operationPage = bankDomain.operations(accountCode, page, PAGE_SIZE);
+        Page<Operation> operationPage = operationDomain.operations(accountCode, page, PAGE_SIZE);
 
         model.addAttribute("operations", operationPage);
         model.addAttribute("pageNumbers", getPageNumbers(operationPage));
 
         switch (operation) {
             case "deposit":
-                bankDomain.deposit(accountCode, amount);
+                operationDomain.deposit(accountCode, amount);
                 break;
             case "withdrawal":
                 try {
-                    bankDomain.withdrawal(accountCode, amount);
+                    operationDomain.withdrawal(accountCode, amount);
                 } catch (InsufficientBalanceException e) {
                     redirectAttributes.addFlashAttribute("error", e.getMessage());
                     return "redirect:/admin/getAccount?code=" + accountCode;
@@ -79,7 +83,7 @@ public class HomeController {
                 break;
             case "transfer":
                 try {
-                    bankDomain.transfer(accountCode, receiverCode, amount);
+                    operationDomain.transfer(accountCode, receiverCode, amount);
                 } catch (AccountDoesNotExistException e) {
                     redirectAttributes.addFlashAttribute("error", e.getMessage());
                     return "redirect:/admin/getAccount?code=" + accountCode;

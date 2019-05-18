@@ -8,14 +8,10 @@ import com.bondif.accountsmanagementworkshop.entities.CheckingAccount;
 import com.bondif.accountsmanagementworkshop.entities.Client;
 import com.bondif.accountsmanagementworkshop.entities.SavingsAccount;
 import org.springframework.data.domain.Page;
-import org.springframework.data.util.CastUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Date;
 
 @Controller
@@ -80,11 +76,11 @@ public class AccountsController {
     public String update(@PathVariable String code, String type, Double balance, Double special) {
         Account oldAccount = accountDomain.retrieveAccount(code);
 
-        if(oldAccount instanceof CheckingAccount && type.equals("CA")) {
+        if (oldAccount instanceof CheckingAccount && type.equals("CA")) {
             oldAccount.setBalance(balance);
             ((CheckingAccount) oldAccount).setOverdraft(special);
             accountDomain.saveAccount(oldAccount);
-        } else if(oldAccount instanceof SavingsAccount && type.equals("SA")) {
+        } else if (oldAccount instanceof SavingsAccount && type.equals("SA")) {
             oldAccount.setBalance(balance);
             ((SavingsAccount) oldAccount).setRate(special);
             accountDomain.saveAccount(oldAccount);

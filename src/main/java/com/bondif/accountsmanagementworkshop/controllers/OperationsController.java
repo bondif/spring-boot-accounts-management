@@ -1,6 +1,6 @@
 package com.bondif.accountsmanagementworkshop.controllers;
 
-import com.bondif.accountsmanagementworkshop.domain.IBankDomain;
+import com.bondif.accountsmanagementworkshop.domain.IOperationDomain;
 import com.bondif.accountsmanagementworkshop.entities.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class OperationsController {
     private static final int PAGE_SIZE = 4;
 
-    private IBankDomain bankDomain;
+    private IOperationDomain bankDomain;
 
-    public OperationsController(IBankDomain bankDomain) {
+    public OperationsController(IOperationDomain bankDomain) {
         this.bankDomain = bankDomain;
     }
 
     @GetMapping("/admin/operations")
     public String index(Model model, @RequestParam(name = "page", defaultValue = "1") int page) {
-        page = page - 1;
+        --page;
 
         Page<Operation> operations = bankDomain.allOperations(page, PAGE_SIZE);
         model.addAttribute("pageNumbers", getPageNumbers(operations));
