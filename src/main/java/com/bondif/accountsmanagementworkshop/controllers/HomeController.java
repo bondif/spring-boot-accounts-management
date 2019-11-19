@@ -29,7 +29,7 @@ public class HomeController {
     public String index(Model model,
                         @RequestParam(name = "account", defaultValue = "0") String accountCode,
                         @RequestParam(name = "page", defaultValue = "1") int page) {
-        page = page - 1;
+        --page;
         model.addAttribute("account", null);
         if (!accountCode.equals("0")) {
             model.addAttribute("operations", operationDomain.operations(accountCode, page, PAGE_SIZE));
@@ -42,7 +42,7 @@ public class HomeController {
     @GetMapping("/admin/getAccount")
     public String getAccount(String code, Model model, RedirectAttributes redirectAttributes,
                              @RequestParam(name = "page", defaultValue = "1") int page) {
-        page = page - 1;
+        --page;
 
         try {
             model.addAttribute("account", accountDomain.retrieveAccount(code));
@@ -63,7 +63,7 @@ public class HomeController {
                                @RequestParam(name = "page", defaultValue = "1") int page,
                                RedirectAttributes redirectAttributes) {
 
-        page = page - 1;
+        --page;
         Page<Operation> operationPage = operationDomain.operations(accountCode, page, PAGE_SIZE);
 
         model.addAttribute("operations", operationPage);

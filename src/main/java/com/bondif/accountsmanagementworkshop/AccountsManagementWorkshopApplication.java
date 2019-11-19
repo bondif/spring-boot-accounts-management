@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Date;
 
-@SpringBootApplication
+@SpringBootApplication()
 public class AccountsManagementWorkshopApplication {
 
     public static void main(String[] args) {
